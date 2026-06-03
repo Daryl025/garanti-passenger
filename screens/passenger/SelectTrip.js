@@ -37,7 +37,7 @@ export default function SelectTrip({ navigation }) {
 
   useEffect(() => {
     setLoading(true);
-    searchTrips(search.from, search.to, search.date, search.passengers)
+    searchTrips(search.from, search.to, search.date || new Date().toISOString().split("T")[0], search.passengers)
       .then(res => {
         const data = res.data.trips || [];
         setTrips(data.length > 0 ? data : MOCK_TRIPS);

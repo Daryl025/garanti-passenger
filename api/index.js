@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://10.0.0.4:3001';
+const BASE_URL = 'https://sweet-patience-production.up.railway.app';
 
 const api = axios.create({
   baseURL: BASE_URL,
