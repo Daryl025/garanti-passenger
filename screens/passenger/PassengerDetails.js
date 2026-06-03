@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, TextInput } from 'react-native';
+import {
+  View, Text, TouchableOpacity, StyleSheet, SafeAreaView,
+  ScrollView, TextInput, Alert
+} from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useBookingStore } from '../../store/bookingStore';
 import LangToggle from '../../components/LangToggle';
+import api from '../../api';
 
 export default function PassengerDetails({ navigation }) {
   const { t } = useTranslation();
@@ -11,33 +15,67 @@ export default function PassengerDetails({ navigation }) {
   const [phone, setPhone]   = useState('');
   const [errors, setErrors] = useState({});
   const [payMethod, setPayMethod] = useState('cash');
+  const [loading, setLoading] = useState(false);
   const total = getTotalFare();
+  const [standardBags, setStandardBags] = useState(1);
 
-  function proceed() {
+  function validate() {
     const e = {};
     if (!name.trim())  e.name  = t('nameRequired');
     if (!phone.trim()) e.phone = t('phoneRequired');
+    return e;
+  }
+
+  async function proceed() {
+    const e = validate();
     if (Object.keys(e).length) { setErrors(e); return; }
+    if (!selectedTrip?.id) {
+      Alert.alert('Error', 'No trip selected. Please go back and select a trip.');
+      return;
+    }
     setPaymentMethod(payMethod);
-    setConfirmedBooking({
-      ref:      `GE-${Math.floor(1000 + Math.random() * 9000)}`,
-      passenger: name.trim(),
-      phone:    phone.trim(),
-      from:     search.fromName,
-      to:       search.toName,
-      date:     search.date,
-      time:     selectedTrip?.depart_time || '06:00',
-      seats:    selectedSeats,
-      bus:      selectedTrip?.bus_code || 'GE-101',
-      fare:     total,
-      extraBags,
-      payment:  payMethod,
-    });
-    navigation.navigate('Payment');
+    setLoading(true);
+    try {
+      const res = await api.post('/api/tickets/book', {
+        trip_id: selectedTrip.id,
+        passenger_name: name.trim(),
+        passenger_phone: phone.trim(),
+        seat_numbers: selectedSeats,
+        payment_method: payMethod,
+        ticket_type: 'online',
+        extra_bags: extraBags,
+        fare_paid: total,
+      });
+      const ticket = res.data.tickets[0];
+      setConfirmedBooking({
+        ref:        ticket.ref,
+        passenger:  name.trim(),
+        phone:      phone.trim(),
+        from:       search.fromName,
+        to:         search.toName,
+        date:       selectedTrip.trip_date?.split('T')[0] || search.date,
+        time:       selectedTrip.depart_time?.slice(0,5) || '06:00',
+        seats:      selectedSeats,
+        bus:        selectedTrip.bus_code || 'GE-101',
+        fare:       total,
+        extraBags,
+        payment:    payMethod,
+        qr_payload: ticket.qr_payload,
+        qr_image:   ticket.qr_image,
+        ticket_id:  ticket.id,
+      });
+      navigation.navigate('Payment');
+    } catch (err) {
+      const msg = err.response?.data?.error || err.message || 'Booking failed';
+      Alert.alert('Booking Failed', JSON.stringify(err.response?.data) || msg);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   }
 
   const payOptions = [
-    { key: 'cash',         label: 'Cash au guichet',  icon: '��' },
+    { key: 'cash',         label: 'Cash au guichet',  icon: '💵' },
     { key: 'mtn_momo',     label: 'MTN Mobile Money', icon: '📱' },
     { key: 'orange_money', label: 'Orange Money',      icon: '🟠' },
   ];
@@ -49,25 +87,28 @@ export default function PassengerDetails({ navigation }) {
           <Text style={s.backText}>← {t('back')}</Text>
         </TouchableOpacity>
         <Text style={s.title}>{t('passengerDetails')}</Text>
-        <Text style={s.subtitle}>Screen D · Details & Extras</Text>
+        <LangToggle />
       </View>
-      <LangToggle />
       <ScrollView style={s.body} contentContainerStyle={{ gap: 12 }} showsVerticalScrollIndicator={false}>
         <View style={s.card}>
           <Text style={s.cardTitle}>👤 PASSENGER INFO</Text>
           <Text style={s.label}>{t('fullName')}</Text>
           <View style={[s.input, errors.name && s.inputError]}>
             <Text style={s.inputIcon}>👤</Text>
-            <TextInput style={s.inputField} placeholder={t('namePlaceholder')} placeholderTextColor="#ADADAA" value={name} onChangeText={v => { setName(v); setErrors(e => ({ ...e, name: null })); }} />
+            <TextInput style={s.inputField} placeholder={t('namePlaceholder')} placeholderTextColor="#ADADAA"
+              value={name} onChangeText={v => { setName(v); setErrors(e => ({ ...e, name: null })); }} />
           </View>
           {errors.name && <Text style={s.errorText}>{errors.name}</Text>}
           <Text style={[s.label, { marginTop: 10 }]}>{t('phoneNumber')}</Text>
           <View style={[s.input, errors.phone && s.inputError]}>
             <Text style={s.inputIcon}>📞</Text>
-            <TextInput style={s.inputField} placeholder={t('phonePlaceholder')} placeholderTextColor="#ADADAA" value={phone} onChangeText={v => { setPhone(v); setErrors(e => ({ ...e, phone: null })); }} keyboardType="phone-pad" maxLength={12} />
+            <TextInput style={s.inputField} placeholder={t('phonePlaceholder')} placeholderTextColor="#ADADAA"
+              value={phone} onChangeText={v => { setPhone(v); setErrors(e => ({ ...e, phone: null })); }}
+              keyboardType="phone-pad" maxLength={12} />
           </View>
           {errors.phone && <Text style={s.errorText}>{errors.phone}</Text>}
         </View>
+
         <View style={s.card}>
           <Text style={s.cardTitle}>🪑 SELECTED SEATS</Text>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 4 }}>
@@ -76,6 +117,7 @@ export default function PassengerDetails({ navigation }) {
             ))}
           </View>
         </View>
+
         <View style={[s.card, { borderColor: '#B5D4F4', borderWidth: 1.5 }]}>
           <Text style={s.cardTitle}>🧳 {t('extrasLuggage')}</Text>
           <View style={s.extraItem}>
@@ -87,9 +129,9 @@ export default function PassengerDetails({ navigation }) {
               </View>
             </View>
             <View style={s.ctrlRow}>
-              <TouchableOpacity style={s.ctrlBtn}><Text style={s.ctrlBtnText}>−</Text></TouchableOpacity>
-              <Text style={s.ctrlVal}>2</Text>
-              <TouchableOpacity style={s.ctrlBtn}><Text style={s.ctrlBtnText}>+</Text></TouchableOpacity>
+              <TouchableOpacity style={s.ctrlBtn} onPress={() => setStandardBags(Math.max(1, standardBags - 1))}><Text style={s.ctrlBtnText}>−</Text></TouchableOpacity>
+              <Text style={s.ctrlVal}>{standardBags}</Text>
+              <TouchableOpacity style={s.ctrlBtn} onPress={() => setStandardBags(standardBags + 1)}><Text style={s.ctrlBtnText}>+</Text></TouchableOpacity>
             </View>
           </View>
           <View style={[s.extraItem, { borderColor: '#EF9F27', backgroundColor: '#FAEEDA' }]}>
@@ -101,12 +143,13 @@ export default function PassengerDetails({ navigation }) {
               </View>
             </View>
             <View style={s.ctrlRow}>
-              <TouchableOpacity style={s.ctrlBtn} onPress={() => setExtraBags(extraBags - 1)}><Text style={s.ctrlBtnText}>−</Text></TouchableOpacity>
+              <TouchableOpacity style={s.ctrlBtn} onPress={() => setExtraBags(Math.max(0, extraBags - 1))}><Text style={s.ctrlBtnText}>−</Text></TouchableOpacity>
               <Text style={s.ctrlVal}>{extraBags}</Text>
               <TouchableOpacity style={s.ctrlBtn} onPress={() => setExtraBags(extraBags + 1)}><Text style={s.ctrlBtnText}>+</Text></TouchableOpacity>
             </View>
           </View>
         </View>
+
         <View style={s.card}>
           <Text style={s.cardTitle}>💳 PAYMENT METHOD</Text>
           {payOptions.map(opt => (
@@ -117,6 +160,7 @@ export default function PassengerDetails({ navigation }) {
             </TouchableOpacity>
           ))}
         </View>
+
         <View style={s.totalRow}>
           <Text style={s.totalLabel}>{t('totalFare')}</Text>
           <Text style={s.totalVal}>FCFA {total.toLocaleString()}</Text>
@@ -124,8 +168,8 @@ export default function PassengerDetails({ navigation }) {
         <View style={{ height: 10 }} />
       </ScrollView>
       <View style={s.footer}>
-        <TouchableOpacity style={s.btn} onPress={proceed} activeOpacity={0.85}>
-          <Text style={s.btnText}>{t('proceedToPay')} →</Text>
+        <TouchableOpacity style={[s.btn, loading && { opacity: 0.7 }]} onPress={proceed} activeOpacity={0.85} disabled={loading}>
+          <Text style={s.btnText}>{loading ? 'Booking...' : t('proceedToPay') + ' →'}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -134,10 +178,9 @@ export default function PassengerDetails({ navigation }) {
 
 const s = StyleSheet.create({
   shell:           { flex: 1, backgroundColor: '#F7F7F5' },
-  header:          { backgroundColor: '#fff', padding: 14, paddingTop: 10, borderBottomWidth: 1, borderBottomColor: '#EFEFED', flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between' },
-  backText:        { fontSize: 14, color: '#3DB34A', fontWeight: '500', marginBottom: 6 },
+  header:          { backgroundColor: '#fff', padding: 14, paddingTop: 10, borderBottomWidth: 1, borderBottomColor: '#EFEFED', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  backText:        { fontSize: 14, color: '#3DB34A', fontWeight: '500' },
   title:           { fontSize: 17, fontWeight: '600', color: '#111110' },
-  subtitle:        { fontSize: 11, color: '#ADADAA', marginTop: 1 },
   body:            { flex: 1, padding: 14 },
   card:            { backgroundColor: '#fff', borderRadius: 16, borderWidth: 1, borderColor: '#EFEFED', padding: 14, gap: 8 },
   cardTitle:       { fontSize: 11, fontWeight: '600', color: '#737370', letterSpacing: 0.8, marginBottom: 4 },

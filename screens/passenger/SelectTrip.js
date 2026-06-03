@@ -40,7 +40,14 @@ export default function SelectTrip({ navigation }) {
     searchTrips(search.from, search.to, search.date || new Date().toISOString().split("T")[0], search.passengers)
       .then(res => {
         const data = res.data.trips || [];
-        setTrips(data.length > 0 ? data : MOCK_TRIPS);
+        setTrips(data);
+        if (data.length === 0) {
+          Alert.alert(
+            'No Trips Available',
+            'No trips found for this route and date. Please try a different route or date.',
+            [{ text: 'OK', onPress: () => navigation.goBack() }]
+          );
+        }
         setLoading(false);
       })
       .catch(() => {
