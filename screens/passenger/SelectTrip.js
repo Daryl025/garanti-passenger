@@ -36,6 +36,7 @@ export default function SelectTrip({ navigation }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!search.from || !search.to) { navigation.goBack(); return; }
     setLoading(true);
     searchTrips(search.from, search.to, search.date || new Date().toISOString().split("T")[0], search.passengers)
       .then(res => {
