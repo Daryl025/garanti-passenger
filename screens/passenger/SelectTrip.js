@@ -50,8 +50,9 @@ export default function SelectTrip({ navigation }) {
         }
         setLoading(false);
       })
-      .catch(() => {
-        setTrips(MOCK_TRIPS);
+      .catch(err => {
+        console.error('Search failed:', err?.response?.data || err.message);
+        setTrips([]);
         setLoading(false);
       });
   }, [search.from, search.to, search.date]);
