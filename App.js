@@ -1,3 +1,4 @@
+import OfflineBanner from './components/OfflineBanner';
 import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -28,6 +29,8 @@ export default function App() {
 
   if (loading) {
     return (
+    <>
+    <OfflineBanner />
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#111110' }}>
         <ActivityIndicator color="#3DB34A" size="large" />
       </View>

@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, ActivityIndicator } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -39,9 +40,13 @@ export default function SelectTrip({ navigation }) {
     if (!search.from || !search.to) { navigation.goBack(); return; }
     setLoading(true);
     searchTrips(search.from, search.to, search.date || new Date().toISOString().split("T")[0], search.passengers)
-      .then(res => {
+      .then(async res => {
         const data = res.data.trips || [];
         setTrips(data);
+        if (data.length > 0) {
+          const key = 'trips_' + search.from + '_' + search.to + '_' + (search.date || '');
+          await AsyncStorage.setItem(key, JSON.stringify(data));
+        }
         if (data.length === 0) {
           Alert.alert(
             'No Trips Available',
@@ -51,9 +56,13 @@ export default function SelectTrip({ navigation }) {
         }
         setLoading(false);
       })
-      .catch(err => {
+      .catch(async err => {
         console.error('Search failed:', err?.response?.data || err.message);
-        setTrips([]);
+        try {
+          const key = 'trips_' + search.from + '_' + search.to + '_' + (search.date || '');
+          const cached = await AsyncStorage.getItem(key);
+          if (cached) { setTrips(JSON.parse(cached)); }
+        } catch (e) {}
         setLoading(false);
       });
   }, [search.from, search.to, search.date]);
