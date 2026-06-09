@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, Image } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useBookingStore } from '../../store/bookingStore';
 import LangToggle from '../../components/LangToggle';
@@ -103,10 +103,10 @@ export default function Confirmation({ navigation }) {
             <Text style={s.smsTitle}>Ticket sent via SMS</Text>
             <Text style={s.smsSub}>Sent to {b.phone} · Garanti Express</Text>
           </View>
-          <Text style={{ color: '#3DB34A', fontSize: 14 }}>✓</Text>
+          <Text style={{ color: b.sms_sent ? '#3DB34A' : '#ADADAA', fontSize: 14 }}>{b.sms_sent ? '✓' : '–'}</Text>
         </View>
 
-        <TouchableOpacity style={s.ghostBtn} onPress={() => { reset(); navigation.replace('SearchTrip'); }} activeOpacity={0.85}>
+        <TouchableOpacity style={s.ghostBtn} onPress={() => { navigation.replace('SearchTrip'); setTimeout(reset, 300); }} activeOpacity={0.85}>
           <Text style={s.ghostBtnText}>{t('bookAnother')} →</Text>
         </TouchableOpacity>
         <View style={{ height: 20 }} />
