@@ -106,7 +106,7 @@ export default function Confirmation({ navigation }) {
           <Text style={{ color: b.sms_sent ? '#3DB34A' : '#ADADAA', fontSize: 14 }}>{b.sms_sent ? '✓' : '–'}</Text>
         </View>
 
-        <TouchableOpacity style={s.ghostBtn} onPress={() => { navigation.replace('SearchTrip'); setTimeout(reset, 300); }} activeOpacity={0.85}>
+        <TouchableOpacity style={s.ghostBtn} onPress={() => { reset(); setTimeout(() => navigation.replace('SearchTrip'), 50); }} activeOpacity={0.85}>
           <Text style={s.ghostBtnText}>{t('bookAnother')} →</Text>
         </TouchableOpacity>
         <View style={{ height: 20 }} />
