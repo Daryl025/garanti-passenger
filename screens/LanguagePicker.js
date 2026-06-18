@@ -4,11 +4,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import '../i18n';
 import i18n from '../i18n';
 
-export default function LanguagePicker({ navigation }) {
+export default function LanguagePicker({ navigation, onLanguageSet }) {
   async function pick(lang) {
     await AsyncStorage.setItem('tms_language', lang);
     i18n.changeLanguage(lang);
-    navigation.reset({ index: 0, routes: [{ name: 'RoleSelect' }] });
+    if (onLanguageSet) { onLanguageSet(); } else { navigation.replace('RoleSelect'); }
   }
 
   return (
