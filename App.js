@@ -41,7 +41,7 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           {!hasLanguage ? (
-            <Stack.Screen name="Language" component={LanguagePicker} />
+            <Stack.Screen name="Language">{(props) => <LanguagePicker {...props} onLanguageSet={() => setHasLanguage(true)} />}</Stack.Screen>
           ) : (
             <>
               <Stack.Screen name="RoleSelect" component={RoleSelect} />
