@@ -51,6 +51,7 @@ export default function App() {
               <Stack.Screen name="PassengerDetails" component={PassengerDetails} />
               <Stack.Screen name="Payment" component={Payment} />
               <Stack.Screen name="Confirmation" component={Confirmation} />
+              <Stack.Screen name="MyTickets" component={MyTickets} />
             </>
           )}
         </Stack.Navigator>
