@@ -65,10 +65,14 @@ export default function SearchTrip({ navigation }) {
   return (
     <SafeAreaView style={s.shell}>
       <View style={s.header}>
-        <Text style={s.title}>{t('searchTrip')}</Text>
-        <Text style={s.subtitle}>Screen A · Input Hub</Text>
-      <LangToggle />
-        <TouchableOpacity onPress={() => navigation.navigate("MyTickets")} style={{ padding: 4 }}><Text style={{ fontSize: 12, color: "#3DB34A", fontWeight: "600" }}>My Tickets</Text></TouchableOpacity>
+        <View>
+          <Text style={s.title}>{t('searchTrip')}</Text>
+          <Text style={s.subtitle}>Screen A · Input Hub</Text>
+        </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+          <TouchableOpacity onPress={() => navigation.navigate("MyTickets")} style={{ padding: 4 }}><Text style={{ fontSize: 12, color: "#3DB34A", fontWeight: "600" }}>My Tickets</Text></TouchableOpacity>
+          <LangToggle />
+        </View>
       </View>
 
       <ScrollView style={s.body} contentContainerStyle={{ gap: 14 }} showsVerticalScrollIndicator={false}>
