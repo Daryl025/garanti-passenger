@@ -67,7 +67,7 @@ export default function SearchTrip({ navigation }) {
       <View style={s.header}>
         <View>
           <Text style={s.title}>{t('searchTrip')}</Text>
-          <Text style={s.subtitle}>Screen A · Input Hub</Text>
+
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
           <TouchableOpacity onPress={() => navigation.navigate("MyTickets")} style={{ padding: 4 }}><Text style={{ fontSize: 12, color: "#3DB34A", fontWeight: "600" }}>My Tickets</Text></TouchableOpacity>
