@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, Image, RefreshControl } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, RefreshControl } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import QRCode from 'react-native-qrcode-svg';
 
 export default function MyTickets({ navigation }) {
   const [tickets, setTickets] = useState([]);
@@ -71,10 +72,8 @@ export default function MyTickets({ navigation }) {
               </View>
               {(t.qr_payload || t.ref) && (
                 <View style={s.qrWrap}>
-                  <View style={{ borderWidth: 1, borderColor: '#EFEFED', borderRadius: 10, padding: 10, alignItems: 'center' }}>
-                    <Text style={{ fontSize: 13, fontWeight: '700', color: '#111110', marginBottom: 4 }}>{t.qr_payload || t.ref}</Text>
-                    <Text style={s.qrHint}>Show at boarding gate</Text>
-                  </View>
+                  <QRCode value={t.qr_payload || t.ref} size={140} color='#111110' backgroundColor='#ffffff' />
+                  <Text style={s.qrHint}>Show at boarding gate</Text>
                 </View>
               )}
             </View>
