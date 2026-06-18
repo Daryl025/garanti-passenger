@@ -65,10 +65,11 @@ export default function MyTickets({ navigation }) {
                   <Text style={[s.badgeText, { color: st.color }]}>{st.label}</Text>
                 </View>
               </View>
+              <Text style={{ fontSize: 13, fontWeight: '600', color: '#111110', marginBottom: 8 }}>{t.passenger || t.passengerName || t.passenger_name || ''}</Text>
               <View style={s.div} />
               <View style={s.row}>
                 <View><Text style={s.lbl}>REF</Text><Text style={s.ref}>{t.ref}</Text></View>
-                <View><Text style={s.lbl}>SEAT</Text><Text style={s.val}>{t.seats?.[0] || t.seat_number || '—'}</Text></View>
+                <View><Text style={s.lbl}>SEAT</Text><Text style={s.val}>{t.seats?.[0] || t.seats?.[0] || t.seat_number || '—'}</Text></View>
                 <View><Text style={s.lbl}>FARE</Text><Text style={s.val}>FCFA {(t.fare || t.fare_paid)?.toLocaleString()}</Text></View>
               </View>
               {(t.qr_payload || t.ref) && (
