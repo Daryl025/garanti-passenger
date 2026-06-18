@@ -207,7 +207,7 @@ export default function SearchTrip({ navigation }) {
 const s = StyleSheet.create({
   shell:            { flex: 1, backgroundColor: '#F7F7F5' },
   header:           { backgroundColor: '#fff', padding: 16, paddingTop: 12, borderBottomWidth: 1, borderBottomColor: '#EFEFED', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
-  title:            { fontSize: 22, fontWeight: '600', color: '#111110' },
+  title:            { fontSize: 16, fontWeight: '600', color: '#111110' },
   subtitle:         { fontSize: 11, color: '#ADADAA', marginTop: 2 },
   body:             { flex: 1, padding: 16 },
   toggle:           { flexDirection: 'row', backgroundColor: '#fff', borderRadius: 12, borderWidth: 1, borderColor: '#EFEFED', overflow: 'hidden' },
