@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, Image } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useBookingStore } from '../../store/bookingStore';
 import LangToggle from '../../components/LangToggle';
 
@@ -30,6 +31,16 @@ export default function Confirmation({ navigation }) {
   }
 
   const b = confirmedBooking;
+
+  React.useEffect(() => {
+    if (!b) return;
+    AsyncStorage.getItem('my_tickets').then(data => {
+      const list = data ? JSON.parse(data) : [];
+      if (!list.find(t => t.ref === b.ref)) {
+        AsyncStorage.setItem('my_tickets', JSON.stringify([b, ...list.slice(0, 49)]));
+      }
+    });
+  }, [b?.ref]);
 
   return (
     <SafeAreaView style={s.shell}>

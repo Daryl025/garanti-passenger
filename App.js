@@ -10,6 +10,7 @@ import SearchTrip from './screens/passenger/SearchTrip';
 import SelectTrip from './screens/passenger/SelectTrip';
 import SeatMap from './screens/passenger/SeatMap';
 import PassengerDetails from './screens/passenger/PassengerDetails';
+import MyTickets    from './screens/passenger/MyTickets';
 import Confirmation from './screens/passenger/Confirmation';
 import Payment from './screens/passenger/Payment';
 
