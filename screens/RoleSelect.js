@@ -15,8 +15,8 @@ export default function RoleSelect({ navigation }) {
 
   const roles = [
     { icon: '🎫', title: t('passenger'), sub: t('passengerSub'), screen: 'SearchTrip', color: '#3DB34A', bg: '#EAF3DE' },
-    { icon: '🖥️', title: t('clerk'),     sub: t('clerkSub'),     screen: 'SearchTrip', color: '#378ADD', bg: '#E6F1FB' },
-    { icon: '📊', title: t('owner'),     sub: t('ownerSub'),     screen: 'SearchTrip', color: '#BA7517', bg: '#FAEEDA' },
+  
+  
   ];
 
   return (
