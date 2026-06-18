@@ -1,25 +1,12 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
+import QRCode from 'react-native-qrcode-svg';
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useBookingStore } from '../../store/bookingStore';
 import LangToggle from '../../components/LangToggle';
 
-function MiniQR({ value }) {
-  const size = 8;
-  const cells = [];
-  for (let i = 0; i < size * size; i++) {
-    const code = value.charCodeAt(i % value.length);
-    cells.push((code * 7 + i * 13) % 3 !== 0);
-  }
-  return (
-    <View style={{ flexDirection: 'row', flexWrap: 'wrap', width: 112, height: 112, gap: 1 }}>
-      {cells.map((on, i) => (
-        <View key={i} style={{ width: 13, height: 13, backgroundColor: on ? '#111' : 'transparent', borderRadius: 1 }} />
-      ))}
-    </View>
-  );
-}
+
 
 export default function Confirmation({ navigation }) {
   const { t } = useTranslation();
@@ -88,7 +75,7 @@ export default function Confirmation({ navigation }) {
             <View style={s.qrBox}>
               <Text style={s.qrRef}>{b.ref}</Text>
               {b.qr_payload && <Text style={[s.qrRef, { fontSize: 8, color: '#ADADAA' }]}>Tap to scan at gate</Text>}
-              <MiniQR value={b.qr_payload || b.ref} />
+              <QRCode value={b.qr_payload || b.ref} size={140} color='#111110' backgroundColor='#ffffff' />
               <Text style={s.qrSub}>{t('qrSub')}</Text>
             </View>
           </View>
