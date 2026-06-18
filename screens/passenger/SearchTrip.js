@@ -66,7 +66,7 @@ export default function SearchTrip({ navigation }) {
     <SafeAreaView style={s.shell}>
       <View style={s.header}>
         <View>
-          <Text style={s.title}>{t('searchTrip')}</Text>
+          <Text style={{ fontSize: 24 }}>🚌</Text>
 
         </View>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
