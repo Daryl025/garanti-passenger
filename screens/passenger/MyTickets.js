@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, RefreshControl } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import QRCode from 'react-native-qrcode-svg';
+let QRCode = null;
+try { QRCode = require('react-native-qrcode-svg').default; } catch (e) {}
 
 export default function MyTickets({ navigation }) {
   const [tickets, setTickets] = useState([]);

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
-import QRCode from 'react-native-qrcode-svg';
+let QRCode = null;
+try { QRCode = require('react-native-qrcode-svg').default; } catch (e) {}
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useBookingStore } from '../../store/bookingStore';
