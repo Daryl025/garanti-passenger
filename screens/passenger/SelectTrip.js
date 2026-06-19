@@ -39,7 +39,7 @@ export default function SelectTrip({ navigation }) {
   useEffect(() => {
     if (!search.from || !search.to) { navigation.goBack(); return; }
     setLoading(true);
-    searchTrips(search.from, search.to, search.date || new Date().toISOString().split("T")[0], search.passengers)
+    searchTrips(search.from, search.to, search.date || new Date(Date.now() + 3600000).toISOString().split("T")[0], search.passengers)
       .then(async res => {
         const data = res.data.trips || [];
         setTrips(data);
