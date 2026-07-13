@@ -22,8 +22,9 @@ function formatDate(date) {
 
 function friendlyDate(dateStr) {
   if (!dateStr) return null;
-  const d = new Date(dateStr);
-  return d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' });
+  const [y, m, d] = dateStr.split('-');
+  const date = new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
+  return date.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' });
 }
 
 export default function SearchTrip({ navigation }) {
