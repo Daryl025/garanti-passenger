@@ -6,17 +6,20 @@ import { useBookingStore } from '../../store/bookingStore';
 import LangToggle from '../../components/LangToggle';
 
 const TERMINALS = [
-  { code: '65887779-2ea0-4615-813f-45772a8f5770', name: 'Douala Akwa',          city: 'Douala' },
-  { code: 'edf50d69-0aa5-4baa-87be-b8b8eb60af2d', name: 'Douala Bonabéri',      city: 'Douala' },
-  { code: '81bb4e6e-c758-47cd-a689-40e0f43a31f4', name: 'Yaoundé Nsam',         city: 'Yaoundé' },
-  { code: 'ed2f3e2f-a2ff-4545-8950-f758ba9a4f95', name: 'Bamenda City Chemist', city: 'Bamenda' },
-  { code: '436e3879-2c4c-4bdf-8801-134eb5621a51', name: 'Bafoussam',             city: 'Bafoussam' },
-  { code: '49188d8e-ad15-4ee6-9100-2d85fb25988b', name: 'Buea',                  city: 'Buea' },
-  { code: 'GE-LMB', name: 'Limbe', city: 'Limbe' },
+  { code: 'GE-DLA-AKWA', name: 'Douala Akwa',          city: 'Douala' },
+  { code: 'GE-DLA-BON',  name: 'Douala Bonabéri',      city: 'Douala' },
+  { code: 'GE-YDE-NSAM', name: 'Yaoundé Nsam',         city: 'Yaoundé' },
+  { code: 'GE-BMD-CC',   name: 'Bamenda City Chemist', city: 'Bamenda' },
+  { code: 'GE-BFS',      name: 'Bafoussam',             city: 'Bafoussam' },
+  { code: 'GE-BUE',      name: 'Buea',                  city: 'Buea' },
+  { code: 'GE-LMB',      name: 'Limbe',                 city: 'Limbe' },
 ];
 
 function formatDate(date) {
-  return date.toLocaleDateString('en-CA', { timeZone: 'Africa/Douala' });
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return y + '-' + m + '-' + d;
 }
 
 function friendlyDate(dateStr) {
