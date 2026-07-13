@@ -44,7 +44,7 @@ export default function SearchTrip({ navigation }) {
 
   function onDateChange(event, date) {
     setShowDatePicker(false);
-    if (date) {
+    if (date) { date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
       setSelectedDate(date);
       setSearch({ date: formatDate(date) });
     }
@@ -52,7 +52,7 @@ export default function SearchTrip({ navigation }) {
 
   function onReturnDateChange(event, date) {
     setShowReturnPicker(false);
-    if (date) {
+    if (date) { date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
       setSelectedReturnDate(date);
       setSearch({ returnDate: formatDate(date) });
     }
