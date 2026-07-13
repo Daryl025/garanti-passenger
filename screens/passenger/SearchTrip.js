@@ -16,9 +16,7 @@ const TERMINALS = [
 ];
 
 function formatDate(date) {
-  const offset = date.getTimezoneOffset();
-  const adjusted = new Date(date.getTime() - offset * 60000);
-  return adjusted.toISOString().split('T')[0];
+  return date.toLocaleDateString('en-CA', { timeZone: 'Africa/Douala' });
 }
 
 function friendlyDate(dateStr) {
