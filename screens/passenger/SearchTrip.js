@@ -43,6 +43,7 @@ export default function SearchTrip({ navigation }) {
   function onDateChange(event, date) {
     setShowDatePicker(false);
     if (date) {
+      console.log("RAW DATE:", date.toString(), "FORMATTED:", formatDate(date));
       setSelectedDate(date);
       setSearch({ date: formatDate(date) });
     }
