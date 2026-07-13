@@ -16,9 +16,10 @@ const TERMINALS = [
 ];
 
 function formatDate(date) {
-  const d = new Date(date);
-  const watTime = new Date(d.getTime() + (d.getTimezoneOffset() * 60000) + 3600000);
-  return `${watTime.getFullYear()}-${String(watTime.getMonth()+1).padStart(2,'0')}-${String(watTime.getDate()).padStart(2,'0')}`;
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
 }
 
 function friendlyDate(dateStr) {
